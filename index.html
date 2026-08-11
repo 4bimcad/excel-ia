@@ -490,7 +490,7 @@
 
 <script>
   // =================================================================
-  // CONFIGURACIÓN — Supabase (guardar datos) + EmailJS (aviso al correo)
+  // CONFIGURACIÓN — Supabase (guardar datos)
   // =================================================================
   // Esta tabla es GENÉRICA: sirve para TODOS tus landings/cursos.
   // Cada landing solo cambia el COURSE_ID de abajo — no crees una
@@ -519,7 +519,7 @@
   //    -- Para ver los leads de un curso puntual más tarde:
   //    -- select * from waitlist_leads where curso = 'excel-macros-ia';
   //
-  const SUPABASE_URL = 'hhttps://klrtplilnprkrmeugqgi.supabase.co';
+  const SUPABASE_URL = 'https://klrtplilnprkrmeugqgi.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtscnRwbGlsbnBya3JtZXVncWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTA5NzksImV4cCI6MjEwMTk4Njk3OX0.fdkBP9d4XP-UQyIRqVIssBCquy0Ayk2_nWemxzgKPHgl';
   const SUPABASE_TABLE = 'waitlist_leads';
 
@@ -527,25 +527,9 @@
   //    al copiar este bloque a otro landing. Usa un slug corto y único.
   const COURSE_ID = 'excel-macros-ia';
 
-  // 3) EMAILJS — crea cuenta gratis en emailjs.com (una sola vez)
-  //    - Email Services: conecta tu Gmail/Outlook -> copia el Service ID
-  //    - Email Templates: crea uno con variables
-  //      {{curso}} {{nombre}} {{whatsapp}} {{extra}} {{origen}}
-  //      -> copia el Template ID
-  //    - Account > General: copia tu Public Key
-  //
-  const EMAILJS_PUBLIC_KEY = 'TU_EMAILJS_PUBLIC_KEY';
-  const EMAILJS_SERVICE_ID = 'TU_EMAILJS_SERVICE_ID';
-  const EMAILJS_TEMPLATE_ID = 'TU_EMAILJS_TEMPLATE_ID';
-
-  const isConfigured = (val) => val && !val.startsWith('TU_');
-
   let sbClient = null;
-  if (isConfigured(SUPABASE_URL) && isConfigured(SUPABASE_ANON_KEY) && window.supabase) {
+  if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
     sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  }
-  if (isConfigured(EMAILJS_PUBLIC_KEY) && window.emailjs) {
-    emailjs.init(EMAILJS_PUBLIC_KEY);
   }
   // =================================================================
 
@@ -606,26 +590,19 @@
         console.warn('Supabase no configurado todavía — dato no guardado:', data);
       }
 
-      // Enviar aviso por correo con EmailJS (si está configurado)
-      if (isConfigured(EMAILJS_PUBLIC_KEY) && window.emailjs) {
-        const emailPayload = {
-          curso: data.curso,
-          nombre: data.nombre,
-          whatsapp: data.whatsapp,
-          rol: data.extra.rol,
-          horas: data.extra.horas,
-          origen: data.origen,
-        };
-        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, emailPayload);
-      }
-
       form.classList.add('hidden');
       document.getElementById('form-success').classList.remove('hidden');
     } catch (err) {
       console.error('Error al enviar el formulario:', err);
       submitBtn.disabled = false;
       submitBtn.textContent = originalBtnText;
-      alert('Hubo un problema al enviar tus datos. Por favor intenta de nuevo o escríbenos por WhatsApp.');
+      
+      // Mensaje de error más amigable
+      let errorMsg = 'Hubo un problema al enviar tus datos. Por favor intenta de nuevo.';
+      if (err.message && err.message.includes('Invalid API key')) {
+        errorMsg = 'Error de conexión con la base de datos. Por favor contacta al administrador.';
+      }
+      alert(errorMsg);
     }
   });
 </script>
