@@ -13,7 +13,6 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <link rel="icon" type="image/png" sizes="48x48" href="icons8-ms-excel-48.png">
   <link rel="shortcut icon" type="image/png" href="icons8-ms-excel-48.png">
   <script>
@@ -45,9 +44,7 @@
   </script>
 
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       background-color: #FFFFFF;
@@ -57,9 +54,7 @@
       background-size: 44px 44px;
     }
 
-    .no-grid {
-      background-image: none;
-    }
+    .no-grid { background-image: none; }
 
     .cell-tag {
       font-family: 'IBM Plex Mono', monospace;
@@ -79,62 +74,31 @@
       animation: blink 1s step-start infinite;
     }
 
-    @keyframes blink {
-      50% {
-        opacity: 0;
-      }
-    }
+    @keyframes blink { 50% { opacity: 0; } }
 
-    .card-shadow {
-      box-shadow: 4px 4px 0px 0px rgba(20, 27, 22, 0.9);
-    }
+    .card-shadow { box-shadow: 4px 4px 0px 0px rgba(20, 27, 22, 0.9); }
+    .card-shadow-sm { box-shadow: 3px 3px 0px 0px rgba(20, 27, 22, 0.85); }
 
-    .card-shadow-sm {
-      box-shadow: 3px 3px 0px 0px rgba(20, 27, 22, 0.85);
-    }
+    details>summary { list-style: none; }
+    details>summary::-webkit-details-marker { display: none; }
 
-    details>summary {
-      list-style: none;
-    }
-
-    details>summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .plus-icon {
-      transition: transform 0.2s ease;
-    }
-
-    details[open] .plus-icon {
-      transform: rotate(45deg);
-    }
+    .plus-icon { transition: transform 0.2s ease; }
+    details[open] .plus-icon { transform: rotate(45deg); }
 
     .fade-up {
       opacity: 0;
       transform: translateY(16px);
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-    .fade-up.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    ::selection { background: #E2A63B; color: #141B16; }
 
-    ::selection {
-      background: #E2A63B;
-      color: #141B16;
-    }
-
-    .strike-price {
-      position: relative;
-    }
-
+    .strike-price { position: relative; }
     .strike-price::after {
       content: "";
       position: absolute;
-      left: -4%;
-      right: -4%;
-      top: 52%;
+      left: -4%; right: -4%; top: 52%;
       height: 2px;
       background: #C0473F;
       transform: rotate(-4deg);
@@ -445,68 +409,69 @@
       </div>
 
       <div class="bg-cream border border-line rounded-lg p-7 sm:p-8 card-shadow">
-  <form id="waitlist-form" class="space-y-5">
-    <div>
-      <label for="nombre" class="block text-sm font-medium text-ink2 mb-1.5">Nombre completo *</label>
-      <input required type="text" id="nombre" name="nombre"
-        class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
-        placeholder="Ej. María Quispe">
-    </div>
-    
-    <div>
-      <label for="email" class="block text-sm font-medium text-ink2 mb-1.5">Correo electrónico *</label>
-      <input required type="email" id="email" name="email"
-        class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
-        placeholder="tu@email.com">
-    </div>
-    
-    <div>
-      <label for="whatsapp" class="block text-sm font-medium text-ink2 mb-1.5">WhatsApp *</label>
-      <input required type="tel" id="whatsapp" name="whatsapp"
-        class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
-        placeholder="+51 9XX XXX XXX">
-    </div>
-    
-    <div>
-      <label for="rol" class="block text-sm font-medium text-ink2 mb-1.5">¿Cuál describe mejor tu rol?</label>
-      <select id="rol" name="rol"
-        class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition">
-        <option>Contador(a)</option>
-        <option>Auxiliar contable</option>
-        <option>Analista financiero / administrativo</option>
-        <option>Otro</option>
-      </select>
-    </div>
-    
-    <div>
-      <label for="horas" class="block text-sm font-medium text-ink2 mb-1.5">¿Cuánto tiempo pierdes al mes en tareas repetitivas de Excel?</label>
-      <select id="horas" name="horas"
-        class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition">
-        <option>Menos de 2 horas</option>
-        <option>2 a 5 horas</option>
-        <option>5 a 10 horas</option>
-        <option>Más de 10 horas</option>
-      </select>
-    </div>
+        <form id="waitlist-form" class="space-y-5">
+          <div>
+            <label for="nombre" class="block text-sm font-medium text-ink2 mb-1.5">Nombre completo *</label>
+            <input required type="text" id="nombre" name="nombre"
+              class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
+              placeholder="Ej. María Quispe">
+          </div>
 
-    <button type="submit"
-      class="w-full bg-moss text-white font-display font-semibold px-6 py-3.5 rounded card-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none hover:bg-moss2 transition">
-      Reservar mi cupo
-    </button>
-    <p class="text-xs text-ink2/70 text-center">No se realiza ningún cobro al enviar este formulario.</p>
-  </form>
+          <div>
+            <label for="email" class="block text-sm font-medium text-ink2 mb-1.5">Correo electrónico *</label>
+            <input required type="email" id="email" name="email"
+              class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
+              placeholder="tu@email.com">
+          </div>
 
-  <div id="form-success" class="hidden text-center py-8">
-    <p class="font-display text-2xl font-semibold text-moss">¡Gracias!</p>
-    <p class="text-ink2 mt-3 leading-relaxed">
-      Hemos recibido tu solicitud para el curso 
-      <span class="font-semibold text-moss">"Excel con Macros e IA"</span>.<br>
-      En breve recibirás todos los detalles del curso 
-      (fecha de inicio, acceso y pago) en tu correo 
-      <span id="user-email" class="font-semibold text-moss"></span>. 
-    </p>
-  </div>
-</div>
+          <div>
+            <label for="whatsapp" class="block text-sm font-medium text-ink2 mb-1.5">WhatsApp *</label>
+            <input required type="tel" id="whatsapp" name="whatsapp"
+              class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
+              placeholder="+51 9XX XXX XXX">
+          </div>
+
+          <div>
+            <label for="rol" class="block text-sm font-medium text-ink2 mb-1.5">¿Cuál describe mejor tu rol?</label>
+            <select id="rol" name="rol"
+              class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition">
+              <option>Contador(a)</option>
+              <option>Auxiliar contable</option>
+              <option>Analista financiero / administrativo</option>
+              <option>Otro</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="horas" class="block text-sm font-medium text-ink2 mb-1.5">¿Cuánto tiempo pierdes al mes en
+              tareas repetitivas de Excel?</label>
+            <select id="horas" name="horas"
+              class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition">
+              <option>Menos de 2 horas</option>
+              <option>2 a 5 horas</option>
+              <option>5 a 10 horas</option>
+              <option>Más de 10 horas</option>
+            </select>
+          </div>
+
+          <button type="submit"
+            class="w-full bg-moss text-white font-display font-semibold px-6 py-3.5 rounded card-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none hover:bg-moss2 transition">
+            Reservar mi cupo
+          </button>
+          <p class="text-xs text-ink2/70 text-center">No se realiza ningún cobro al enviar este formulario.</p>
+        </form>
+
+        <div id="form-success" class="hidden text-center py-8">
+          <p class="font-display text-2xl font-semibold text-moss">¡Gracias!</p>
+          <p class="text-ink2 mt-3 leading-relaxed">
+            Hemos recibido tu solicitud para el curso
+            <span class="font-semibold text-moss">"Excel con Macros e IA"</span>.<br>
+            En breve recibirás todos los detalles del curso
+            (fecha de inicio, acceso y pago) en tu correo
+            <span id="user-email" class="font-semibold text-moss"></span>.
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -588,133 +553,96 @@
   </a>
 
   <script>
-  // =================================================================
-  // CONFIGURACIÓN — Supabase (guardar datos)
-  // =================================================================
-  const SUPABASE_URL = 'https://klrtplilnprkrmeugqgi.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtscnRwbGlsbnBya3JtZXVncWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTA5NzksImV4cCI6MjEwMTk4Njk3OX0.fdkBP9d4XP-UQyIRqVIssBCquy0Ayk2_nWemxzgKPHg';
-  const SUPABASE_TABLE = 'waitlist_leads';
-  const COURSE_ID = 'excel-macros-ia';
+    // =================================================================
+    // CONFIGURACIÓN — Supabase
+    // Tabla genérica para todos los cursos: waitlist_leads
+    // (curso, nombre, email, whatsapp, extra jsonb, origen, created_at)
+    // =================================================================
+    const SUPABASE_URL = 'https://klrtplilnprkrmeugqgi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtscnRwbGlsbnBya3JtZXVncWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTA5NzksImV4cCI6MjEwMTk4Njk3OX0.fdkBP9d4XP-UQyIRqVIssBCquy0Ayk2_nWemxzgKPHg';
+    const SUPABASE_TABLE = 'waitlist_leads';
+    const COURSE_ID = 'excel-macros-ia';
 
-  // Инициализация Supabase
-  let sbClient = null;
-  if (window.supabase) {
-    sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    console.log('Supabase инициализирован');
-  } else {
-    console.error('Supabase библиотека не загружена!');
-  }
-
-  // Проверка подключения (добавьте это для отладки)
-  async function testConnection() {
-    if (!sbClient) {
-      console.error('Supabase клиент не создан');
-      return;
-    }
-    
-    try {
-      const { data, error } = await sbClient
-        .from(SUPABASE_TABLE)
-        .select('count')
-        .limit(1);
-      
-      if (error) {
-        console.error('Ошибка подключения к Supabase:', error);
-      } else {
-        console.log('✅ Подключение к Supabase успешно!');
-      }
-    } catch (err) {
-      console.error('Ошибка:', err);
-    }
-  }
-
-  // Запускаем проверку через 1 секунду после загрузки
-  setTimeout(testConnection, 1000);
-
-  // Typing animation for the formula bar
-  const formulaText = '=SI(HORAS_PERDIDAS>10,"AUTOMATIZA","SIGUE ASI")';
-  const el = document.getElementById('formula-text');
-  let i = 0;
-  function typeFormula() {
-    if (i <= formulaText.length) {
-      el.textContent = formulaText.slice(0, i);
-      i++;
-      setTimeout(typeFormula, 45);
+    let sbClient = null;
+    if (window.supabase) {
+      sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     } else {
-      setTimeout(() => { i = 0; typeFormula(); }, 2600);
+      console.error('No se pudo cargar la librería de Supabase.');
     }
-  }
-  typeFormula();
 
-  // Fade-up on scroll
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('visible');
+    // Typing animation for the formula bar
+    const formulaText = '=SI(HORAS_PERDIDAS>10,"AUTOMATIZA","SIGUE ASI")';
+    const el = document.getElementById('formula-text');
+    let i = 0;
+    function typeFormula() {
+      if (i <= formulaText.length) {
+        el.textContent = formulaText.slice(0, i);
+        i++;
+        setTimeout(typeFormula, 45);
+      } else {
+        setTimeout(() => { i = 0; typeFormula(); }, 2600);
+      }
+    }
+    typeFormula();
+
+    // Fade-up on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('section').forEach(s => {
+      s.classList.add('fade-up');
+      observer.observe(s);
     });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('section').forEach(s => {
-    s.classList.add('fade-up');
-    observer.observe(s);
-  });
 
-  // Form submit
-  const form = document.getElementById('waitlist-form');
-  const submitBtn = form.querySelector('button[type="submit"]');
+    // Form submit
+    const form = document.getElementById('waitlist-form');
+    const submitBtn = form.querySelector('button[type="submit"]');
 
-  form.addEventListener('submit', async function (e) {
-    e.preventDefault();
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
 
-    const data = {
-      curso: COURSE_ID,
-      nombre: document.getElementById('nombre').value,
-      email: document.getElementById('email').value,
-      whatsapp: document.getElementById('whatsapp').value,
-      extra: {
-        rol: document.getElementById('rol').value,
-        horas: document.getElementById('horas').value,
-      },
-      origen: window.location.href,
-    };
+      const data = {
+        curso: COURSE_ID,
+        nombre: document.getElementById('nombre').value,
+        email: document.getElementById('email').value,
+        whatsapp: document.getElementById('whatsapp').value,
+        extra: {
+          rol: document.getElementById('rol').value,
+          horas: document.getElementById('horas').value,
+        },
+        origen: window.location.href,
+      };
 
-    const originalBtnText = submitBtn.textContent;
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Enviando...';
+      const originalBtnText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
 
-    try {
-      if (!sbClient) {
-        throw new Error('Supabase не инициализирован');
+      try {
+        if (!sbClient) {
+          throw new Error('Supabase no está inicializado');
+        }
+
+        const { error } = await sbClient.from(SUPABASE_TABLE).insert([data]);
+
+        if (error) {
+          console.error('Error de Supabase:', error);
+          throw error;
+        }
+
+        document.getElementById('user-email').textContent = data.email;
+        form.classList.add('hidden');
+        document.getElementById('form-success').classList.remove('hidden');
+
+      } catch (err) {
+        console.error('Error al enviar el formulario:', err);
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+        alert('Hubo un problema al enviar tus datos. Por favor intenta de nuevo o escríbenos por WhatsApp.');
       }
-
-      console.log('Отправка данных:', data);
-      
-      const { error } = await sbClient
-        .from(SUPABASE_TABLE)
-        .insert([data]);
-
-      if (error) {
-        console.error('Ошибка от Supabase:', error);
-        throw error;
-      }
-
-      console.log('✅ Данные успешно сохранены!');
-      form.classList.add('hidden');
-      document.getElementById('form-success').classList.remove('hidden');
-      
-    } catch (err) {
-      console.error('Ошибка при отправке:', err);
-      submitBtn.disabled = false;
-      submitBtn.textContent = originalBtnText;
-      
-      let errorMsg = 'Hubo un problema al enviar tus datos. Por favor intenta de nuevo.';
-      if (err.message && err.message.includes('Invalid API key')) {
-        errorMsg = 'Error de conexión con la base de datos. Por favor contacta al administrador.';
-      } else if (err.message && err.message.includes('Supabase no')) {
-        errorMsg = 'Error de configuración. Por favor contacta al administrador.';
-      }
-      alert(errorMsg);
-    }
-  });
-</script>
+    });
+  </script>
 
 </body>
 
