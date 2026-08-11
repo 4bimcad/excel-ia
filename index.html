@@ -444,54 +444,68 @@
       </div>
 
       <div class="bg-cream border border-line rounded-lg p-7 sm:p-8 card-shadow">
-        <form id="waitlist-form" class="space-y-5">
-          <div>
-            <label for="nombre" class="block text-sm font-medium text-ink2 mb-1.5">Nombre completo</label>
-            <input required type="text" id="nombre" name="nombre"
-              class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
-              placeholder="Ej. María Quispe">
-          </div>
-          <div>
-            <label for="whatsapp" class="block text-sm font-medium text-ink2 mb-1.5">WhatsApp</label>
-            <input required type="tel" id="whatsapp" name="whatsapp"
-              class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
-              placeholder="+51 9XX XXX XXX">
-          </div>
-          <div>
-            <label for="rol" class="block text-sm font-medium text-ink2 mb-1.5">¿Cuál describe mejor tu rol?</label>
-            <select id="rol" name="rol"
-              class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition">
-              <option>Contador(a)</option>
-              <option>Auxiliar contable</option>
-              <option>Analista financiero / administrativo</option>
-              <option>Otro</option>
-            </select>
-          </div>
-          <div>
-            <label for="horas" class="block text-sm font-medium text-ink2 mb-1.5">¿Cuánto tiempo pierdes al mes en
-              tareas repetitivas de Excel?</label>
-            <select id="horas" name="horas"
-              class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition">
-              <option>Menos de 2 horas</option>
-              <option>2 a 5 horas</option>
-              <option>5 a 10 horas</option>
-              <option>Más de 10 horas</option>
-            </select>
-          </div>
+  <form id="waitlist-form" class="space-y-5">
+    <div>
+      <label for="nombre" class="block text-sm font-medium text-ink2 mb-1.5">Nombre completo *</label>
+      <input required type="text" id="nombre" name="nombre"
+        class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
+        placeholder="Ej. María Quispe">
+    </div>
+    
+    <div>
+      <label for="email" class="block text-sm font-medium text-ink2 mb-1.5">Correo electrónico *</label>
+      <input required type="email" id="email" name="email"
+        class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
+        placeholder="tu@email.com">
+    </div>
+    
+    <div>
+      <label for="whatsapp" class="block text-sm font-medium text-ink2 mb-1.5">WhatsApp *</label>
+      <input required type="tel" id="whatsapp" name="whatsapp"
+        class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
+        placeholder="+51 9XX XXX XXX">
+    </div>
+    
+    <div>
+      <label for="rol" class="block text-sm font-medium text-ink2 mb-1.5">¿Cuál describe mejor tu rol?</label>
+      <select id="rol" name="rol"
+        class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition">
+        <option>Contador(a)</option>
+        <option>Auxiliar contable</option>
+        <option>Analista financiero / administrativo</option>
+        <option>Otro</option>
+      </select>
+    </div>
+    
+    <div>
+      <label for="horas" class="block text-sm font-medium text-ink2 mb-1.5">¿Cuánto tiempo pierdes al mes en tareas repetitivas de Excel?</label>
+      <select id="horas" name="horas"
+        class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition">
+        <option>Menos de 2 horas</option>
+        <option>2 a 5 horas</option>
+        <option>5 a 10 horas</option>
+        <option>Más de 10 horas</option>
+      </select>
+    </div>
 
-          <button type="submit"
-            class="w-full bg-moss text-white font-display font-semibold px-6 py-3.5 rounded card-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none hover:bg-moss2 transition">
-            Reservar mi cupo
-          </button>
-          <p class="text-xs text-ink2/70 text-center">No se realiza ningún cobro al enviar este formulario.</p>
-        </form>
+    <button type="submit"
+      class="w-full bg-moss text-white font-display font-semibold px-6 py-3.5 rounded card-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none hover:bg-moss2 transition">
+      Reservar mi cupo
+    </button>
+    <p class="text-xs text-ink2/70 text-center">No se realiza ningún cobro al enviar este formulario.</p>
+  </form>
 
-        <div id="form-success" class="hidden text-center py-8">
-          <p class="font-display text-2xl font-semibold text-moss">¡Listo!</p>
-          <p class="text-ink2 mt-3 leading-relaxed">Recibimos tus datos. Te escribimos por WhatsApp para confirmar tu
-            cupo al precio de fundador.</p>
-        </div>
-      </div>
+  <div id="form-success" class="hidden text-center py-8">
+    <p class="font-display text-2xl font-semibold text-moss">¡Gracias!</p>
+    <p class="text-ink2 mt-3 leading-relaxed">
+      Hemos recibido tu solicitud para el curso 
+      <span class="font-semibold text-moss">"Excel con Macros e IA"</span>.<br>
+      En breve recibirás todos los detalles del curso 
+      (fecha de inicio, acceso y pago) en tu correo 
+      <span id="user-email" class="font-semibold text-moss"></span>. 
+    </p>
+  </div>
+</div>
     </div>
   </section>
 
@@ -652,6 +666,7 @@
     const data = {
       curso: COURSE_ID,
       nombre: document.getElementById('nombre').value,
+      email: document.getElementById('email').value,
       whatsapp: document.getElementById('whatsapp').value,
       extra: {
         rol: document.getElementById('rol').value,
