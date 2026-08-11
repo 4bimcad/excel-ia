@@ -573,123 +573,132 @@
   </a>
 
   <script>
-    // =================================================================
-    // CONFIGURACIÓN — Supabase (guardar datos)
-    // =================================================================
-    // Esta tabla es GENÉRICA: sirve para TODOS tus landings/cursos.
-    // Cada landing solo cambia el COURSE_ID de abajo — no crees una
-    // tabla nueva por cada curso.
-    //
-    // 1) SUPABASE — crea el proyecto UNA vez en supabase.com, ve a
-    //    Project Settings > API y copia la URL y la anon key aquí abajo.
-    //    (Usa el MISMO proyecto/URL/key en todos tus landings).
-    //
-    //    Crea la tabla UNA sola vez con este SQL:
-    //
-    //    create table waitlist_leads (
-    //      id uuid primary key default gen_random_uuid(),
-    //      curso text not null,          -- identifica de qué landing viene
-    //      nombre text not null,
-    //      whatsapp text not null,
-    //      extra jsonb default '{}'::jsonb,  -- campos propios de cada curso
-    //      origen text,                  -- URL del landing (automático)
-    //      created_at timestamptz default now()
-    //    );
-    //
-    //    alter table waitlist_leads enable row level security;
-    //    create policy "Permitir insertar" on waitlist_leads
-    //      for insert to anon with check (true);
-    //
-    //    -- Para ver los leads de un curso puntual más tarde:
-    //    -- select * from waitlist_leads where curso = 'excel-macros-ia';
-    //
-    const SUPABASE_URL = 'https://klrtplilnprkrmeugqgi.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtscnRwbGlsbnBya3JtZXVncWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTA5NzksImV4cCI6MjEwMTk4Njk3OX0.fdkBP9d4XP-UQyIRqVIssBCquy0Ayk2_nWemxzgKPHgl';
-    const SUPABASE_TABLE = 'waitlist_leads';
+  // =================================================================
+  // CONFIGURACIÓN — Supabase (guardar datos)
+  // =================================================================
+  const SUPABASE_URL = 'https://klrtplilnprkrmeugqgi.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtscnRwbGlsbnBya3JtZXVncWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTA5NzksImV4cCI6MjEwMTk4Njk3OX0.fdkBP9d4XP-UQyIRqVIssBCquy0Ayk2_nWemxzgKPHgl';
+  const SUPABASE_TABLE = 'waitlist_leads';
+  const COURSE_ID = 'excel-macros-ia';
 
-    // 2) IDENTIFICADOR DE ESTE CURSO — esto es lo ÚNICO que cambias
-    //    al copiar este bloque a otro landing. Usa un slug corto y único.
-    const COURSE_ID = 'excel-macros-ia';
+  // Инициализация Supabase
+  let sbClient = null;
+  if (window.supabase) {
+    sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log('Supabase инициализирован');
+  } else {
+    console.error('Supabase библиотека не загружена!');
+  }
 
-    let sbClient = null;
-    if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
-      sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // Проверка подключения (добавьте это для отладки)
+  async function testConnection() {
+    if (!sbClient) {
+      console.error('Supabase клиент не создан');
+      return;
     }
-    // =================================================================
-
-    // Typing animation for the formula bar
-    const formulaText = '=SI(HORAS_PERDIDAS>10,"AUTOMATIZA","SIGUE ASI")';
-    const el = document.getElementById('formula-text');
-    let i = 0;
-    function typeFormula() {
-      if (i <= formulaText.length) {
-        el.textContent = formulaText.slice(0, i);
-        i++;
-        setTimeout(typeFormula, 45);
+    
+    try {
+      const { data, error } = await sbClient
+        .from(SUPABASE_TABLE)
+        .select('count')
+        .limit(1);
+      
+      if (error) {
+        console.error('Ошибка подключения к Supabase:', error);
       } else {
-        setTimeout(() => {i = 0; typeFormula();}, 2600);
+        console.log('✅ Подключение к Supabase успешно!');
       }
+    } catch (err) {
+      console.error('Ошибка:', err);
     }
-    typeFormula();
+  }
 
-    // Fade-up on scroll
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('visible');
-      });
-    }, {threshold: 0.1});
-    document.querySelectorAll('section').forEach(s => {
-      s.classList.add('fade-up');
-      observer.observe(s);
+  // Запускаем проверку через 1 секунду после загрузки
+  setTimeout(testConnection, 1000);
+
+  // Typing animation for the formula bar
+  const formulaText = '=SI(HORAS_PERDIDAS>10,"AUTOMATIZA","SIGUE ASI")';
+  const el = document.getElementById('formula-text');
+  let i = 0;
+  function typeFormula() {
+    if (i <= formulaText.length) {
+      el.textContent = formulaText.slice(0, i);
+      i++;
+      setTimeout(typeFormula, 45);
+    } else {
+      setTimeout(() => { i = 0; typeFormula(); }, 2600);
+    }
+  }
+  typeFormula();
+
+  // Fade-up on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
     });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('section').forEach(s => {
+    s.classList.add('fade-up');
+    observer.observe(s);
+  });
 
-    // Form submit
-    const form = document.getElementById('waitlist-form');
-    const submitBtn = form.querySelector('button[type="submit"]');
+  // Form submit
+  const form = document.getElementById('waitlist-form');
+  const submitBtn = form.querySelector('button[type="submit"]');
 
-    form.addEventListener('submit', async function (e) {
-      e.preventDefault();
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-      const data = {
-        curso: COURSE_ID,
-        nombre: document.getElementById('nombre').value,
-        whatsapp: document.getElementById('whatsapp').value,
-        extra: {
-          rol: document.getElementById('rol').value,
-          horas: document.getElementById('horas').value,
-        },
-        origen: window.location.href,
-      };
+    const data = {
+      curso: COURSE_ID,
+      nombre: document.getElementById('nombre').value,
+      whatsapp: document.getElementById('whatsapp').value,
+      extra: {
+        rol: document.getElementById('rol').value,
+        horas: document.getElementById('horas').value,
+      },
+      origen: window.location.href,
+    };
 
-      const originalBtnText = submitBtn.textContent;
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Enviando...';
+    const originalBtnText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
 
-      try {
-        // Guardar en Supabase (si está configurado)
-        if (sbClient) {
-          const {error} = await sbClient.from(SUPABASE_TABLE).insert([data]);
-          if (error) throw error;
-        } else {
-          console.warn('Supabase no configurado todavía — dato no guardado:', data);
-        }
-
-        form.classList.add('hidden');
-        document.getElementById('form-success').classList.remove('hidden');
-      } catch (err) {
-        console.error('Error al enviar el formulario:', err);
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalBtnText;
-
-        // Mensaje de error más amigable
-        let errorMsg = 'Hubo un problema al enviar tus datos. Por favor intenta de nuevo.';
-        if (err.message && err.message.includes('Invalid API key')) {
-          errorMsg = 'Error de conexión con la base de datos. Por favor contacta al administrador.';
-        }
-        alert(errorMsg);
+    try {
+      if (!sbClient) {
+        throw new Error('Supabase не инициализирован');
       }
-    });
-  </script>
+
+      console.log('Отправка данных:', data);
+      
+      const { error } = await sbClient
+        .from(SUPABASE_TABLE)
+        .insert([data]);
+
+      if (error) {
+        console.error('Ошибка от Supabase:', error);
+        throw error;
+      }
+
+      console.log('✅ Данные успешно сохранены!');
+      form.classList.add('hidden');
+      document.getElementById('form-success').classList.remove('hidden');
+      
+    } catch (err) {
+      console.error('Ошибка при отправке:', err);
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+      
+      let errorMsg = 'Hubo un problema al enviar tus datos. Por favor intenta de nuevo.';
+      if (err.message && err.message.includes('Invalid API key')) {
+        errorMsg = 'Error de conexión con la base de datos. Por favor contacta al administrador.';
+      } else if (err.message && err.message.includes('Supabase no')) {
+        errorMsg = 'Error de configuración. Por favor contacta al administrador.';
+      }
+      alert(errorMsg);
+    }
+  });
+</script>
 
 </body>
 
