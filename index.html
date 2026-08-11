@@ -1,611 +1,696 @@
 <!DOCTYPE html>
 <html lang="es-PE">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>excel-ia.infoset.org.pe | Excel + Macros + IA para Contadores</title>
-<meta name="description" content="Automatiza tu trabajo contable sin ser programador. Curso práctico de macros e inteligencia artificial para contadores en Perú. Lista de espera abierta.">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>excel-ia.infoset.org.pe | Excel + Macros + IA para Contadores</title>
+  <meta name="description"
+    content="Automatiza tu trabajo contable sin ser programador. Curso práctico de macros e inteligencia artificial para contadores en Perú. Lista de espera abierta.">
 
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          paper:   '#FFFFFF',
-          paper2:  '#F2F7F3',
-          ink:     '#14201A',
-          ink2:    '#43514A',
-          moss:    '#217346',
-          moss2:   '#185C37',
-          excelblue: '#1B4F8C',
-          excelblue2: '#123A69',
-          amber:   '#E2A63B',
-          amber2:  '#C98A22',
-          line:    '#D7E0D9',
-          cream:   '#FFFFFF',
-        },
-        fontFamily: {
-          display: ['Helvetica', 'Arial', 'sans-serif'],
-          body: ['Helvetica', 'Arial', 'sans-serif'],
-          mono: ['"IBM Plex Mono"', 'monospace'],
-        },
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            paper: '#FFFFFF',
+            paper2: '#F2F7F3',
+            ink: '#14201A',
+            ink2: '#43514A',
+            moss: '#217346',
+            moss2: '#185C37',
+            excelblue: '#1B4F8C',
+            excelblue2: '#123A69',
+            amber: '#E2A63B',
+            amber2: '#C98A22',
+            line: '#D7E0D9',
+            cream: '#FFFFFF',
+          },
+          fontFamily: {
+            display: ['Helvetica', 'Arial', 'sans-serif'],
+            body: ['Helvetica', 'Arial', 'sans-serif'],
+            mono: ['"IBM Plex Mono"', 'monospace'],
+          },
+        }
       }
     }
-  }
-</script>
+  </script>
 
-<style>
-  html { scroll-behavior: smooth; }
-  body {
-    background-color: #FFFFFF;
-    background-image:
-      linear-gradient(rgba(33,115,70,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(33,115,70,0.06) 1px, transparent 1px);
-    background-size: 44px 44px;
-  }
-  .no-grid { background-image: none; }
-  .cell-tag {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    color: #217346;
-    border: 1px solid #217346;
-    padding: 2px 8px;
-    border-radius: 3px;
-  }
-  .formula-caret {
-    display: inline-block;
-    width: 2px;
-    background: #217346;
-    margin-left: 2px;
-    animation: blink 1s step-start infinite;
-  }
-  @keyframes blink { 50% { opacity: 0; } }
-  .card-shadow {
-    box-shadow: 4px 4px 0px 0px rgba(20,27,22,0.9);
-  }
-  .card-shadow-sm {
-    box-shadow: 3px 3px 0px 0px rgba(20,27,22,0.85);
-  }
-  details > summary { list-style: none; }
-  details > summary::-webkit-details-marker { display: none; }
-  .plus-icon { transition: transform 0.2s ease; }
-  details[open] .plus-icon { transform: rotate(45deg); }
-  .fade-up {
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-  .fade-up.visible { opacity: 1; transform: translateY(0); }
-  ::selection { background: #E2A63B; color: #141B16; }
-  .strike-price { position: relative; }
-  .strike-price::after {
-    content: "";
-    position: absolute;
-    left: -4%; right: -4%; top: 52%;
-    height: 2px;
-    background: #C0473F;
-    transform: rotate(-4deg);
-  }
-</style>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: #FFFFFF;
+      background-image:
+        linear-gradient(rgba(33, 115, 70, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(33, 115, 70, 0.06) 1px, transparent 1px);
+      background-size: 44px 44px;
+    }
+
+    .no-grid {
+      background-image: none;
+    }
+
+    .cell-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: #217346;
+      border: 1px solid #217346;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+
+    .formula-caret {
+      display: inline-block;
+      width: 2px;
+      background: #217346;
+      margin-left: 2px;
+      animation: blink 1s step-start infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .card-shadow {
+      box-shadow: 4px 4px 0px 0px rgba(20, 27, 22, 0.9);
+    }
+
+    .card-shadow-sm {
+      box-shadow: 3px 3px 0px 0px rgba(20, 27, 22, 0.85);
+    }
+
+    details>summary {
+      list-style: none;
+    }
+
+    details>summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .plus-icon {
+      transition: transform 0.2s ease;
+    }
+
+    details[open] .plus-icon {
+      transform: rotate(45deg);
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    ::selection {
+      background: #E2A63B;
+      color: #141B16;
+    }
+
+    .strike-price {
+      position: relative;
+    }
+
+    .strike-price::after {
+      content: "";
+      position: absolute;
+      left: -4%;
+      right: -4%;
+      top: 52%;
+      height: 2px;
+      background: #C0473F;
+      transform: rotate(-4deg);
+    }
+  </style>
 </head>
 
 <body class="font-body text-ink antialiased">
 
-<!-- ============ NAV ============ -->
-<header class="sticky top-0 z-50 border-b border-line bg-paper/90 backdrop-blur">
-  <div class="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
-    <a href="#top" class="font-display font-semibold text-lg tracking-tight flex items-baseline gap-0.5">
-      <span class="text-ink">excel-ia</span><span class="text-moss">.</span><span class="hidden sm:inline text-ink2 font-normal text-base">infoset.org.pe</span>
-    </a>
-    <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-ink2">
-      <a href="#para-quien" class="hover:text-ink transition">Para quién</a>
-      <a href="#programa" class="hover:text-ink transition">Programa</a>
-      <a href="#precio" class="hover:text-ink transition">Precio</a>
-      <a href="#faq" class="hover:text-ink transition">Preguntas</a>
-    </nav>
-    <a href="#lista-espera" class="bg-moss hover:bg-moss2 text-white transition rounded px-4 py-2 text-sm font-semibold">
-      Unirme a la lista →
-    </a>
-  </div>
-</header>
-
-<!-- ============ HERO ============ -->
-<section id="top" class="max-w-6xl mx-auto px-5 sm:px-8 pt-14 sm:pt-20 pb-16">
-  <div class="grid md:grid-cols-12 gap-10 items-start">
-    <div class="md:col-span-7">
-      <span class="cell-tag">A1</span>
-      <h1 class="font-display text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.05] font-semibold mt-5 tracking-tight">
-        Deja de perder horas copiando y pegando entre Excels.
-      </h1>
-      <p class="mt-6 text-lg text-ink2 leading-relaxed max-w-xl">
-        Un curso práctico para contadores y analistas que quieren usar macros e inteligencia artificial para automatizar reportes, conciliaciones y tareas repetitivas — sin saber programar.
-      </p>
-
-      <div class="mt-8 flex flex-col sm:flex-row gap-4">
-        <a href="#lista-espera" class="text-center bg-moss text-white font-display font-semibold px-7 py-3.5 rounded card-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none hover:bg-moss2 transition">
-          Unirme a la lista de espera
-        </a>
-        <a href="#programa" class="text-center border border-ink/30 font-medium px-7 py-3.5 rounded hover:border-ink transition">
-          Ver el programa
-        </a>
-      </div>
-
-      <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink2 font-mono">
-        <span>Inicio previsto: <strong class="text-ink">01 sept 2026</strong></span>
-        <span class="hidden sm:inline">·</span>
-        <span>Cupos limitados</span>
-        <span class="hidden sm:inline">·</span>
-        <span>Sin pago por adelantado</span>
-      </div>
-    </div>
-
-    <div class="md:col-span-5">
-      <div class="bg-cream border border-line rounded-lg card-shadow overflow-hidden">
-        <div class="flex items-center gap-1.5 px-4 py-2.5 border-b border-line bg-paper2">
-          <span class="w-2.5 h-2.5 rounded-full bg-[#C0473F]"></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-[#E2A63B]"></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-moss"></span>
-          <span class="ml-3 font-mono text-xs text-ink2">reporte_mensual.xlsm — fx</span>
-        </div>
-        <div class="px-5 py-5 font-mono text-sm">
-          <div class="flex gap-2 text-ink2 border-b border-line pb-3 mb-3">
-            <span class="text-moss font-semibold">fx</span>
-            <span id="formula-text" class="text-ink"></span><span class="formula-caret h-4"></span>
-          </div>
-          <div class="grid grid-cols-[28px_1fr] gap-y-1 text-xs text-ink2">
-            <div class="text-right pr-2 text-ink/40">1</div><div>Antes: 6 horas / mes copiando datos</div>
-            <div class="text-right pr-2 text-ink/40">2</div><div>Después: <span class="text-moss font-semibold">1 clic, 4 minutos</span></div>
-            <div class="text-right pr-2 text-ink/40">3</div><div class="text-ink/30">— generado con macro + IA —</div>
-          </div>
-        </div>
-      </div>
-      <p class="text-xs text-ink2/70 mt-3 font-mono text-center">Así se ve automatizar una tarea que hoy haces a mano.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ PARA QUIÉN ============ -->
-<section id="para-quien" class="max-w-6xl mx-auto px-5 sm:px-8 py-16 border-t border-line">
-  <span class="cell-tag">B2</span>
-  <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-4 tracking-tight">¿Es este curso para ti?</h2>
-
-  <div class="grid md:grid-cols-2 gap-6 mt-10">
-    <div class="bg-cream border border-line rounded-lg p-7 card-shadow-sm">
-      <h3 class="font-display font-semibold text-lg flex items-center gap-2">
-        <span class="text-moss"><i class="fa-solid fa-check"></i></span> Sí, si eres...
-      </h3>
-      <ul class="mt-4 space-y-3 text-ink2">
-        <li class="flex gap-2"><span class="text-moss mt-1">—</span> Contador o auxiliar contable con manejo medio de Excel (fórmulas, tablas, reportes)</li>
-        <li class="flex gap-2"><span class="text-moss mt-1">—</span> Analista financiero o administrativo que arma el mismo reporte cada mes</li>
-        <li class="flex gap-2"><span class="text-moss mt-1">—</span> Alguien que quiere usar la IA como herramienta de trabajo, no como misterio</li>
-      </ul>
-    </div>
-    <div class="bg-paper2 border border-line rounded-lg p-7">
-      <h3 class="font-display font-semibold text-lg flex items-center gap-2 text-ink2">
-        <span class="text-[#C0473F]"><i class="fa-solid fa-xmark"></i></span> No, si eres...
-      </h3>
-      <ul class="mt-4 space-y-3 text-ink2/80">
-        <li class="flex gap-2"><span class="mt-1">—</span> Principiante absoluto en Excel, sin manejo de fórmulas básicas</li>
-        <li class="flex gap-2"><span class="mt-1">—</span> Buscas convertirte en programador o desarrollador</li>
-        <li class="flex gap-2"><span class="mt-1">—</span> Esperas un curso 100% teórico</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- ============ QUÉ VAS A LOGRAR ============ -->
-<section class="max-w-6xl mx-auto px-5 sm:px-8 py-16 border-t border-line">
-  <span class="cell-tag">C3</span>
-  <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-4 tracking-tight max-w-2xl">
-    Al terminar, vas a poder...
-  </h2>
-  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
-    <div class="border-l-2 border-moss pl-5 py-1">
-      <p class="font-display font-semibold">Crear tus propios macros con ayuda de IA</p>
-      <p class="text-sm text-ink2 mt-1.5">Usando ChatGPT o Claude como asistente, sin memorizar código.</p>
-    </div>
-    <div class="border-l-2 border-moss pl-5 py-1">
-      <p class="font-display font-semibold">Automatizar tareas repetitivas</p>
-      <p class="text-sm text-ink2 mt-1.5">Reportes, limpieza de datos, unión de archivos, cálculos mensuales.</p>
-    </div>
-    <div class="border-l-2 border-moss pl-5 py-1">
-      <p class="font-display font-semibold">Usar Power Query para preparar datos</p>
-      <p class="text-sm text-ink2 mt-1.5">Actualizar reportes completos con un solo clic.</p>
-    </div>
-    <div class="border-l-2 border-moss pl-5 py-1">
-      <p class="font-display font-semibold">Armar botones y formularios simples</p>
-      <p class="text-sm text-ink2 mt-1.5">Para que tus archivos sean fáciles de usar por cualquiera del equipo.</p>
-    </div>
-    <div class="border-l-2 border-moss pl-5 py-1">
-      <p class="font-display font-semibold">Adaptar soluciones a tus propios archivos</p>
-      <p class="text-sm text-ink2 mt-1.5">No plantillas genéricas — lo que aprendes lo aplicas a tu trabajo real.</p>
-    </div>
-    <div class="border-l-2 border-moss pl-5 py-1">
-      <p class="font-display font-semibold">Recuperar horas cada mes</p>
-      <p class="text-sm text-ink2 mt-1.5">Tiempo que hoy se va en copiar y pegar, disponible para análisis real.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ PROGRAMA ============ -->
-<section id="programa" class="max-w-6xl mx-auto px-5 sm:px-8 py-16 border-t border-line">
-  <span class="cell-tag">D4</span>
-  <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-4 tracking-tight">Programa del curso</h2>
-  <p class="text-ink2 mt-3 max-w-xl">5 módulos, ~6–9 horas de video, práctica con archivos reales después de cada uno.</p>
-
-  <div class="mt-10 divide-y divide-line border-t border-b border-line">
-    <details class="group py-5" open>
-      <summary class="flex items-center justify-between cursor-pointer">
-        <div class="flex items-center gap-4">
-          <span class="font-mono text-sm text-moss w-6">01</span>
-          <span class="font-display font-semibold text-lg">Fundamentos de la automatización en Excel</span>
-        </div>
-        <span class="plus-icon font-mono text-xl text-ink2">+</span>
-      </summary>
-      <p class="text-ink2 mt-3 ml-10 text-sm leading-relaxed">Cuándo sí conviene usar macros y cuándo no. Configuración de seguridad, la grabadora de macros y sus límites, cómo pedirle código a la IA correctamente, y tus primeros macros funcionando.</p>
-    </details>
-
-    <details class="group py-5">
-      <summary class="flex items-center justify-between cursor-pointer">
-        <div class="flex items-center gap-4">
-          <span class="font-mono text-sm text-moss w-6">02</span>
-          <span class="font-display font-semibold text-lg">Las automatizaciones que más usa un contador</span>
-        </div>
-        <span class="plus-icon font-mono text-xl text-ink2">+</span>
-      </summary>
-      <p class="text-ink2 mt-3 ml-10 text-sm leading-relaxed">Limpieza y preparación de datos, unión de varios archivos de una carpeta, generación automática de reportes, conciliaciones y reportes mensuales típicos. Práctica con archivos de ejemplo.</p>
-    </details>
-
-    <details class="group py-5">
-      <summary class="flex items-center justify-between cursor-pointer">
-        <div class="flex items-center gap-4">
-          <span class="font-mono text-sm text-moss w-6">03</span>
-          <span class="font-display font-semibold text-lg">Macros + IA <span class="text-xs font-mono text-moss border border-moss rounded px-1.5 py-0.5 ml-1">módulo clave</span></span>
-        </div>
-        <span class="plus-icon font-mono text-xl text-ink2">+</span>
-      </summary>
-      <p class="text-ink2 mt-3 ml-10 text-sm leading-relaxed">Cómo escribir buenos prompts para generar código VBA, cómo leer y corregir lo que te entrega la IA, creación de botones e interfaz simple, manejo de errores, y cómo guardar tus macros para reutilizarlos.</p>
-    </details>
-
-    <details class="group py-5">
-      <summary class="flex items-center justify-between cursor-pointer">
-        <div class="flex items-center gap-4">
-          <span class="font-mono text-sm text-moss w-6">04</span>
-          <span class="font-display font-semibold text-lg">Power Query + conexión con macros</span>
-        </div>
-        <span class="plus-icon font-mono text-xl text-ink2">+</span>
-      </summary>
-      <p class="text-ink2 mt-3 ml-10 text-sm leading-relaxed">Cuándo usar Power Query en lugar de macros, acciones principales (limpieza, unión, transformación), cómo actualizar reportes con un botón, y cómo combinar ambas herramientas.</p>
-    </details>
-
-    <details class="group py-5">
-      <summary class="flex items-center justify-between cursor-pointer">
-        <div class="flex items-center gap-4">
-          <span class="font-mono text-sm text-moss w-6">05</span>
-          <span class="font-display font-semibold text-lg">Proyecto final + plantillas</span>
-        </div>
-        <span class="plus-icon font-mono text-xl text-ink2">+</span>
-      </summary>
-      <p class="text-ink2 mt-3 ml-10 text-sm leading-relaxed">Armas una automatización completa de principio a fin. Recibes plantillas listas para adaptar, un checklist de buenas prácticas y los errores más comunes a evitar.</p>
-    </details>
-  </div>
-
-  <div class="mt-8 flex flex-wrap gap-4 text-sm text-ink2 font-mono">
-    <span class="cell-tag !text-ink2 !border-line"><i class="fa-solid fa-video"></i> Videos grabados, 10–25 min c/u</span>
-    <span class="cell-tag !text-ink2 !border-line"><i class="fa-solid fa-folder-open"></i> Archivos y ejercicios prácticos</span>
-    <span class="cell-tag !text-ink2 !border-line"><i class="fa-brands fa-whatsapp"></i> Soporte por WhatsApp</span>
-  </div>
-</section>
-
-<!-- ============ PRECIO ============ -->
-<section id="precio" class="max-w-6xl mx-auto px-5 sm:px-8 py-16 border-t border-line">
-  <span class="cell-tag">E5</span>
-  <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-4 tracking-tight">Precio de fundador</h2>
-  <p class="text-ink2 mt-3 max-w-xl">Solo para quienes se inscriben en la lista de espera antes del lanzamiento.</p>
-
-  <div class="mt-10 grid md:grid-cols-5 gap-8 items-start">
-    <div class="md:col-span-2 bg-ink rounded-lg p-6 sm:p-7 card-shadow">
-      <p class="font-mono text-xs text-white/50 uppercase tracking-wider px-1">Precio de lanzamiento</p>
-
-      <div class="bg-white rounded-md p-6 mt-4">
-        <div class="flex items-baseline gap-3">
-          <span class="strike-price font-mono text-xl text-ink/40">S/ 569</span>
-          <span class="font-display text-5xl font-bold text-ink">S/ 349</span>
-        </div>
-        <p class="font-mono text-xs text-moss mt-2 font-semibold">−39% · solo primeros cupos confirmados</p>
-        <ul class="mt-6 space-y-2.5 text-sm text-ink2">
-          <li class="flex gap-2"><span class="text-moss">—</span> Acceso a los 5 módulos completos</li>
-          <li class="flex gap-2"><span class="text-moss">—</span> Plantillas y biblioteca de prompts</li>
-          <li class="flex gap-2"><span class="text-moss">—</span> Soporte por WhatsApp</li>
-          <li class="flex gap-2"><span class="text-moss">—</span> Certificado de finalización</li>
-        </ul>
-      </div>
-
-      <a href="#lista-espera" class="block text-center mt-5 bg-moss hover:bg-moss2 text-white font-display font-semibold px-6 py-3 rounded transition">
-        Reservar mi cupo
+  <!-- ============ NAV ============ -->
+  <header class="sticky top-0 z-50 border-b border-line bg-paper/90 backdrop-blur">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
+      <a href="#top" class="font-display font-semibold text-lg tracking-tight flex items-baseline gap-0.5">
+        <span class="text-ink">excel-ia</span><span class="text-moss">.</span><span
+          class="hidden sm:inline text-ink2 font-normal text-base">infoset.org.pe</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-ink2">
+        <a href="#para-quien" class="hover:text-ink transition">Para quién</a>
+        <a href="#programa" class="hover:text-ink transition">Programa</a>
+        <a href="#precio" class="hover:text-ink transition">Precio</a>
+        <a href="#faq" class="hover:text-ink transition">Preguntas</a>
+      </nav>
+      <a href="#lista-espera"
+        class="bg-moss hover:bg-moss2 text-white transition rounded px-4 py-2 text-sm font-semibold">
+        Unirme a la lista →
       </a>
     </div>
+  </header>
 
-    <div class="md:col-span-3 space-y-5">
-      <div class="border border-line rounded-lg p-6 bg-cream">
-        <p class="font-display font-semibold">¿Cómo funciona la reserva?</p>
-        <p class="text-sm text-ink2 mt-2 leading-relaxed">
-          No pedimos pago por adelantado. Completas el formulario, confirmamos contigo por WhatsApp, y si el curso se confirma, te avisamos con anticipación para asegurar tu cupo al precio de fundador.
+  <!-- ============ HERO ============ -->
+  <section id="top" class="max-w-6xl mx-auto px-5 sm:px-8 pt-14 sm:pt-20 pb-16">
+    <div class="grid md:grid-cols-12 gap-10 items-start">
+      <div class="md:col-span-7">
+        <span class="cell-tag">A1</span>
+        <h1 class="font-display text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.05] font-semibold mt-5 tracking-tight">
+          Deja de perder horas copiando y pegando entre Excels.
+        </h1>
+        <p class="mt-6 text-lg text-ink2 leading-relaxed max-w-xl">
+          Un curso práctico para contadores y analistas que quieren usar macros e inteligencia artificial para
+          automatizar reportes, conciliaciones y tareas repetitivas — sin saber programar.
+        </p>
+
+        <div class="mt-8 flex flex-col sm:flex-row gap-4">
+          <a href="#lista-espera"
+            class="text-center bg-moss text-white font-display font-semibold px-7 py-3.5 rounded card-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none hover:bg-moss2 transition">
+            Unirme a la lista de espera
+          </a>
+          <a href="#programa"
+            class="text-center border border-ink/30 font-medium px-7 py-3.5 rounded hover:border-ink transition">
+            Ver el programa
+          </a>
+        </div>
+
+        <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink2 font-mono">
+          <span>Inicio previsto: <strong class="text-ink">01 sept 2026</strong></span>
+          <span class="hidden sm:inline">·</span>
+          <span>Cupos limitados</span>
+          <span class="hidden sm:inline">·</span>
+          <span>Sin pago por adelantado</span>
+        </div>
+      </div>
+
+      <div class="md:col-span-5">
+        <div class="bg-cream border border-line rounded-lg card-shadow overflow-hidden">
+          <div class="flex items-center gap-1.5 px-4 py-2.5 border-b border-line bg-paper2">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#C0473F]"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-[#E2A63B]"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-moss"></span>
+            <span class="ml-3 font-mono text-xs text-ink2">reporte_mensual.xlsm — fx</span>
+          </div>
+          <div class="px-5 py-5 font-mono text-sm">
+            <div class="flex gap-2 text-ink2 border-b border-line pb-3 mb-3">
+              <span class="text-moss font-semibold">fx</span>
+              <span id="formula-text" class="text-ink"></span><span class="formula-caret h-4"></span>
+            </div>
+            <div class="grid grid-cols-[28px_1fr] gap-y-1 text-xs text-ink2">
+              <div class="text-right pr-2 text-ink/40">1</div>
+              <div>Antes: 6 horas / mes copiando datos</div>
+              <div class="text-right pr-2 text-ink/40">2</div>
+              <div>Después: <span class="text-moss font-semibold">1 clic, 4 minutos</span></div>
+              <div class="text-right pr-2 text-ink/40">3</div>
+              <div class="text-ink/30">— generado con macro + IA —</div>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-ink2/70 mt-3 font-mono text-center">Así se ve automatizar una tarea que hoy haces a mano.
         </p>
       </div>
-      <div class="border border-line rounded-lg p-6 bg-cream">
-        <p class="font-display font-semibold">¿Y si el curso no se lanza?</p>
-        <p class="text-sm text-ink2 mt-2 leading-relaxed">
-          Estamos validando el interés real antes de producir todo el contenido. Si no se junta un número mínimo de inscritos, te lo decimos con honestidad — sin sorpresas, sin cobros.
-        </p>
+    </div>
+  </section>
+
+  <!-- ============ PARA QUIÉN ============ -->
+  <section id="para-quien" class="max-w-6xl mx-auto px-5 sm:px-8 py-16 border-t border-line">
+    <span class="cell-tag">B2</span>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-4 tracking-tight">¿Es este curso para ti?</h2>
+
+    <div class="grid md:grid-cols-2 gap-6 mt-10">
+      <div class="bg-cream border border-line rounded-lg p-7 card-shadow-sm">
+        <h3 class="font-display font-semibold text-lg flex items-center gap-2">
+          <span class="text-moss"><i class="fa-solid fa-check"></i></span> Sí, si eres...
+        </h3>
+        <ul class="mt-4 space-y-3 text-ink2">
+          <li class="flex gap-2"><span class="text-moss mt-1">—</span> Contador o auxiliar contable con manejo medio de
+            Excel (fórmulas, tablas, reportes)</li>
+          <li class="flex gap-2"><span class="text-moss mt-1">—</span> Analista financiero o administrativo que arma el
+            mismo reporte cada mes</li>
+          <li class="flex gap-2"><span class="text-moss mt-1">—</span> Alguien que quiere usar la IA como herramienta de
+            trabajo, no como misterio</li>
+        </ul>
+      </div>
+      <div class="bg-paper2 border border-line rounded-lg p-7">
+        <h3 class="font-display font-semibold text-lg flex items-center gap-2 text-ink2">
+          <span class="text-[#C0473F]"><i class="fa-solid fa-xmark"></i></span> No, si eres...
+        </h3>
+        <ul class="mt-4 space-y-3 text-ink2/80">
+          <li class="flex gap-2"><span class="mt-1">—</span> Principiante absoluto en Excel, sin manejo de fórmulas
+            básicas</li>
+          <li class="flex gap-2"><span class="mt-1">—</span> Buscas convertirte en programador o desarrollador</li>
+          <li class="flex gap-2"><span class="mt-1">—</span> Esperas un curso 100% teórico</li>
+        </ul>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ============ FORM ============ -->
-<section id="lista-espera" class="max-w-6xl mx-auto px-5 sm:px-8 py-16 border-t border-line">
-  <div class="grid md:grid-cols-2 gap-10 items-start">
-    <div>
-      <span class="cell-tag">F6</span>
-      <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-4 tracking-tight">Únete a la lista de espera</h2>
-      <p class="text-ink2 mt-4 leading-relaxed max-w-md">
-        Déjanos tus datos y te contactamos por WhatsApp para confirmar tu cupo al precio de fundador. Sin pagos, sin compromiso — solo para saber si vale la pena lanzar el curso.
-      </p>
-      <div class="mt-8 font-mono text-xs text-ink2 space-y-1.5">
-        <p>→ Inicio previsto: 01 de septiembre, 2026</p>
-        <p>→ Cupos limitados al precio de fundador</p>
-        <p>→ Confirmación personal por WhatsApp</p>
-      </div>
-    </div>
-
-    <div class="bg-cream border border-line rounded-lg p-7 sm:p-8 card-shadow">
-      <form id="waitlist-form" class="space-y-5">
-        <div>
-          <label for="nombre" class="block text-sm font-medium text-ink2 mb-1.5">Nombre completo</label>
-          <input required type="text" id="nombre" name="nombre"
-            class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
-            placeholder="Ej. María Quispe">
-        </div>
-        <div>
-          <label for="whatsapp" class="block text-sm font-medium text-ink2 mb-1.5">WhatsApp</label>
-          <input required type="tel" id="whatsapp" name="whatsapp"
-            class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
-            placeholder="+51 9XX XXX XXX">
-        </div>
-        <div>
-          <label for="rol" class="block text-sm font-medium text-ink2 mb-1.5">¿Cuál describe mejor tu rol?</label>
-          <select id="rol" name="rol"
-            class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition">
-            <option>Contador(a)</option>
-            <option>Auxiliar contable</option>
-            <option>Analista financiero / administrativo</option>
-            <option>Otro</option>
-          </select>
-        </div>
-        <div>
-          <label for="horas" class="block text-sm font-medium text-ink2 mb-1.5">¿Cuánto tiempo pierdes al mes en tareas repetitivas de Excel?</label>
-          <select id="horas" name="horas"
-            class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition">
-            <option>Menos de 2 horas</option>
-            <option>2 a 5 horas</option>
-            <option>5 a 10 horas</option>
-            <option>Más de 10 horas</option>
-          </select>
-        </div>
-
-        <button type="submit"
-          class="w-full bg-moss text-white font-display font-semibold px-6 py-3.5 rounded card-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none hover:bg-moss2 transition">
-          Reservar mi cupo
-        </button>
-        <p class="text-xs text-ink2/70 text-center">No se realiza ningún cobro al enviar este formulario.</p>
-      </form>
-
-      <div id="form-success" class="hidden text-center py-8">
-        <p class="font-display text-2xl font-semibold text-moss">¡Listo!</p>
-        <p class="text-ink2 mt-3 leading-relaxed">Recibimos tus datos. Te escribimos por WhatsApp para confirmar tu cupo al precio de fundador.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ FAQ ============ -->
-<section id="faq" class="max-w-6xl mx-auto px-5 sm:px-8 py-16 border-t border-line">
-  <span class="cell-tag">G7</span>
-  <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-4 tracking-tight">Preguntas frecuentes</h2>
-
-  <div class="mt-10 divide-y divide-line border-t border-b border-line max-w-3xl">
-    <details class="group py-5">
-      <summary class="flex items-center justify-between cursor-pointer">
-        <span class="font-medium">¿Necesito saber programar?</span>
-        <span class="plus-icon font-mono text-xl text-ink2">+</span>
-      </summary>
-      <p class="text-ink2 mt-3 text-sm leading-relaxed">No. El curso usa la IA como asistente para escribir el código — tú aprendes a pedirlo bien, entenderlo y adaptarlo, no a programar desde cero.</p>
-    </details>
-    <details class="group py-5">
-      <summary class="flex items-center justify-between cursor-pointer">
-        <span class="font-medium">¿Qué nivel de Excel necesito tener?</span>
-        <span class="plus-icon font-mono text-xl text-ink2">+</span>
-      </summary>
-      <p class="text-ink2 mt-3 text-sm leading-relaxed">Nivel medio: manejo de fórmulas, tablas y reportes básicos. No es un curso para principiantes absolutos en Excel.</p>
-    </details>
-    <details class="group py-5">
-      <summary class="flex items-center justify-between cursor-pointer">
-        <span class="font-medium">¿Cuánto tiempo toma completarlo?</span>
-        <span class="plus-icon font-mono text-xl text-ink2">+</span>
-      </summary>
-      <p class="text-ink2 mt-3 text-sm leading-relaxed">Entre 6 y 9 horas de video en total. Recomendamos 3 a 5 semanas a tu propio ritmo, con 3 a 5 horas por semana.</p>
-    </details>
-    <details class="group py-5">
-      <summary class="flex items-center justify-between cursor-pointer">
-        <span class="font-medium">¿Cómo confirman mi cupo?</span>
-        <span class="plus-icon font-mono text-xl text-ink2">+</span>
-      </summary>
-      <p class="text-ink2 mt-3 text-sm leading-relaxed">Por WhatsApp, de forma personal. No se realiza ningún cobro al inscribirte en la lista de espera.</p>
-    </details>
-    <details class="group py-5">
-      <summary class="flex items-center justify-between cursor-pointer">
-        <span class="font-medium">¿Y si el curso finalmente no se lanza?</span>
-        <span class="plus-icon font-mono text-xl text-ink2">+</span>
-      </summary>
-      <p class="text-ink2 mt-3 text-sm leading-relaxed">Te lo comunicamos directamente y con honestidad. Como no hay pago por adelantado, no hay nada que reembolsar.</p>
-    </details>
-  </div>
-</section>
-
-<!-- ============ CTA FINAL ============ -->
-<section class="max-w-6xl mx-auto px-5 sm:px-8 py-20 border-t border-line">
-  <div class="bg-moss2 text-white rounded-lg p-10 sm:p-14 text-center card-shadow">
-    <p class="font-mono text-xs text-moss uppercase tracking-wider">Cupos limitados · Precio de fundador</p>
-    <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-4 max-w-xl mx-auto">
-      Tu próximo reporte podría tomarte 4 minutos en vez de 4 horas.
+  <!-- ============ QUÉ VAS A LOGRAR ============ -->
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-16 border-t border-line">
+    <span class="cell-tag">C3</span>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-4 tracking-tight max-w-2xl">
+      Al terminar, vas a poder...
     </h2>
-    <a href="#lista-espera" class="inline-block mt-8 border-2 border-white bg-transparent hover:bg-white text-white hover:text-moss2 font-display font-semibold px-8 py-3.5 rounded transition">
-      Unirme a la lista de espera
-    </a>
-  </div>
-</section>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
+      <div class="border-l-2 border-moss pl-5 py-1">
+        <p class="font-display font-semibold">Crear tus propios macros con ayuda de IA</p>
+        <p class="text-sm text-ink2 mt-1.5">Usando ChatGPT o Claude como asistente, sin memorizar código.</p>
+      </div>
+      <div class="border-l-2 border-moss pl-5 py-1">
+        <p class="font-display font-semibold">Automatizar tareas repetitivas</p>
+        <p class="text-sm text-ink2 mt-1.5">Reportes, limpieza de datos, unión de archivos, cálculos mensuales.</p>
+      </div>
+      <div class="border-l-2 border-moss pl-5 py-1">
+        <p class="font-display font-semibold">Usar Power Query para preparar datos</p>
+        <p class="text-sm text-ink2 mt-1.5">Actualizar reportes completos con un solo clic.</p>
+      </div>
+      <div class="border-l-2 border-moss pl-5 py-1">
+        <p class="font-display font-semibold">Armar botones y formularios simples</p>
+        <p class="text-sm text-ink2 mt-1.5">Para que tus archivos sean fáciles de usar por cualquiera del equipo.</p>
+      </div>
+      <div class="border-l-2 border-moss pl-5 py-1">
+        <p class="font-display font-semibold">Adaptar soluciones a tus propios archivos</p>
+        <p class="text-sm text-ink2 mt-1.5">No plantillas genéricas — lo que aprendes lo aplicas a tu trabajo real.</p>
+      </div>
+      <div class="border-l-2 border-moss pl-5 py-1">
+        <p class="font-display font-semibold">Recuperar horas cada mes</p>
+        <p class="text-sm text-ink2 mt-1.5">Tiempo que hoy se va en copiar y pegar, disponible para análisis real.</p>
+      </div>
+    </div>
+  </section>
 
-<!-- ============ FOOTER ============ -->
-<footer class="border-t border-line">
-  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-    <p class="font-display font-semibold text-ink2 text-sm">excel-ia.infoset.org.pe</p>
-    <p class="text-xs text-ink2/70 font-mono">Desarrollado con INFOSET</p>
-  </div>
-</footer>
+  <!-- ============ PROGRAMA ============ -->
+  <section id="programa" class="max-w-6xl mx-auto px-5 sm:px-8 py-16 border-t border-line">
+    <span class="cell-tag">D4</span>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-4 tracking-tight">Programa del curso</h2>
+    <p class="text-ink2 mt-3 max-w-xl">5 módulos, ~6–9 horas de video, práctica con archivos reales después de cada uno.
+    </p>
 
-<!-- ============ WHATSAPP FLOAT ============ -->
-<a href="#lista-espera" aria-label="Ir al formulario de WhatsApp"
-   class="fixed bottom-6 right-6 z-50 bg-moss hover:bg-moss2 text-white w-14 h-14 rounded-full flex items-center justify-center card-shadow-sm transition">
-  <i class="fa-brands fa-whatsapp text-2xl"></i>
-</a>
+    <div class="mt-10 divide-y divide-line border-t border-b border-line">
+      <details class="group py-5" open>
+        <summary class="flex items-center justify-between cursor-pointer">
+          <div class="flex items-center gap-4">
+            <span class="font-mono text-sm text-moss w-6">01</span>
+            <span class="font-display font-semibold text-lg">Fundamentos de la automatización en Excel</span>
+          </div>
+          <span class="plus-icon font-mono text-xl text-ink2">+</span>
+        </summary>
+        <p class="text-ink2 mt-3 ml-10 text-sm leading-relaxed">Cuándo sí conviene usar macros y cuándo no.
+          Configuración de seguridad, la grabadora de macros y sus límites, cómo pedirle código a la IA correctamente, y
+          tus primeros macros funcionando.</p>
+      </details>
 
-<script>
-  // =================================================================
-  // CONFIGURACIÓN — Supabase (guardar datos)
-  // =================================================================
-  // Esta tabla es GENÉRICA: sirve para TODOS tus landings/cursos.
-  // Cada landing solo cambia el COURSE_ID de abajo — no crees una
-  // tabla nueva por cada curso.
-  //
-  // 1) SUPABASE — crea el proyecto UNA vez en supabase.com, ve a
-  //    Project Settings > API y copia la URL y la anon key aquí abajo.
-  //    (Usa el MISMO proyecto/URL/key en todos tus landings).
-  //
-  //    Crea la tabla UNA sola vez con este SQL:
-  //
-  //    create table waitlist_leads (
-  //      id uuid primary key default gen_random_uuid(),
-  //      curso text not null,          -- identifica de qué landing viene
-  //      nombre text not null,
-  //      whatsapp text not null,
-  //      extra jsonb default '{}'::jsonb,  -- campos propios de cada curso
-  //      origen text,                  -- URL del landing (automático)
-  //      created_at timestamptz default now()
-  //    );
-  //
-  //    alter table waitlist_leads enable row level security;
-  //    create policy "Permitir insertar" on waitlist_leads
-  //      for insert to anon with check (true);
-  //
-  //    -- Para ver los leads de un curso puntual más tarde:
-  //    -- select * from waitlist_leads where curso = 'excel-macros-ia';
-  //
-  const SUPABASE_URL = 'https://klrtplilnprkrmeugqgi.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtscnRwbGlsbnBya3JtZXVncWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTA5NzksImV4cCI6MjEwMTk4Njk3OX0.fdkBP9d4XP-UQyIRqVIssBCquy0Ayk2_nWemxzgKPHgl';
-  const SUPABASE_TABLE = 'waitlist_leads';
+      <details class="group py-5">
+        <summary class="flex items-center justify-between cursor-pointer">
+          <div class="flex items-center gap-4">
+            <span class="font-mono text-sm text-moss w-6">02</span>
+            <span class="font-display font-semibold text-lg">Las automatizaciones que más usa un contador</span>
+          </div>
+          <span class="plus-icon font-mono text-xl text-ink2">+</span>
+        </summary>
+        <p class="text-ink2 mt-3 ml-10 text-sm leading-relaxed">Limpieza y preparación de datos, unión de varios
+          archivos de una carpeta, generación automática de reportes, conciliaciones y reportes mensuales típicos.
+          Práctica con archivos de ejemplo.</p>
+      </details>
 
-  // 2) IDENTIFICADOR DE ESTE CURSO — esto es lo ÚNICO que cambias
-  //    al copiar este bloque a otro landing. Usa un slug corto y único.
-  const COURSE_ID = 'excel-macros-ia';
+      <details class="group py-5">
+        <summary class="flex items-center justify-between cursor-pointer">
+          <div class="flex items-center gap-4">
+            <span class="font-mono text-sm text-moss w-6">03</span>
+            <span class="font-display font-semibold text-lg">Macros + IA <span
+                class="text-xs font-mono text-moss border border-moss rounded px-1.5 py-0.5 ml-1">módulo
+                clave</span></span>
+          </div>
+          <span class="plus-icon font-mono text-xl text-ink2">+</span>
+        </summary>
+        <p class="text-ink2 mt-3 ml-10 text-sm leading-relaxed">Cómo escribir buenos prompts para generar código VBA,
+          cómo leer y corregir lo que te entrega la IA, creación de botones e interfaz simple, manejo de errores, y cómo
+          guardar tus macros para reutilizarlos.</p>
+      </details>
 
-  let sbClient = null;
-  if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
-    sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  }
-  // =================================================================
+      <details class="group py-5">
+        <summary class="flex items-center justify-between cursor-pointer">
+          <div class="flex items-center gap-4">
+            <span class="font-mono text-sm text-moss w-6">04</span>
+            <span class="font-display font-semibold text-lg">Power Query + conexión con macros</span>
+          </div>
+          <span class="plus-icon font-mono text-xl text-ink2">+</span>
+        </summary>
+        <p class="text-ink2 mt-3 ml-10 text-sm leading-relaxed">Cuándo usar Power Query en lugar de macros, acciones
+          principales (limpieza, unión, transformación), cómo actualizar reportes con un botón, y cómo combinar ambas
+          herramientas.</p>
+      </details>
 
-  // Typing animation for the formula bar
-  const formulaText = '=SI(HORAS_PERDIDAS>10,"AUTOMATIZA","SIGUE ASI")';
-  const el = document.getElementById('formula-text');
-  let i = 0;
-  function typeFormula() {
-    if (i <= formulaText.length) {
-      el.textContent = formulaText.slice(0, i);
-      i++;
-      setTimeout(typeFormula, 45);
-    } else {
-      setTimeout(() => { i = 0; typeFormula(); }, 2600);
+      <details class="group py-5">
+        <summary class="flex items-center justify-between cursor-pointer">
+          <div class="flex items-center gap-4">
+            <span class="font-mono text-sm text-moss w-6">05</span>
+            <span class="font-display font-semibold text-lg">Proyecto final + plantillas</span>
+          </div>
+          <span class="plus-icon font-mono text-xl text-ink2">+</span>
+        </summary>
+        <p class="text-ink2 mt-3 ml-10 text-sm leading-relaxed">Armas una automatización completa de principio a fin.
+          Recibes plantillas listas para adaptar, un checklist de buenas prácticas y los errores más comunes a evitar.
+        </p>
+      </details>
+    </div>
+
+    <div class="mt-8 flex flex-wrap gap-4 text-sm text-ink2 font-mono">
+      <span class="cell-tag !text-ink2 !border-line"><i class="fa-solid fa-video"></i> Videos grabados, 10–25 min
+        c/u</span>
+      <span class="cell-tag !text-ink2 !border-line"><i class="fa-solid fa-folder-open"></i> Archivos y ejercicios
+        prácticos</span>
+      <span class="cell-tag !text-ink2 !border-line"><i class="fa-brands fa-whatsapp"></i> Soporte por WhatsApp</span>
+    </div>
+  </section>
+
+  <!-- ============ PRECIO ============ -->
+  <section id="precio" class="max-w-6xl mx-auto px-5 sm:px-8 py-16 border-t border-line">
+    <span class="cell-tag">E5</span>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-4 tracking-tight">Precio de fundador</h2>
+    <p class="text-ink2 mt-3 max-w-xl">Solo para quienes se inscriben en la lista de espera antes del lanzamiento.</p>
+
+    <div class="mt-10 grid md:grid-cols-5 gap-8 items-start">
+      <div class="md:col-span-2 bg-ink rounded-lg p-6 sm:p-7 card-shadow">
+        <p class="font-mono text-xs text-white/50 uppercase tracking-wider px-1">Precio de lanzamiento</p>
+
+        <div class="bg-white rounded-md p-6 mt-4">
+          <div class="flex items-baseline gap-3">
+            <span class="strike-price font-mono text-xl text-ink/40">S/ 569</span>
+            <span class="font-display text-5xl font-bold text-ink">S/ 349</span>
+          </div>
+          <p class="font-mono text-xs text-moss mt-2 font-semibold">−39% · solo primeros cupos confirmados</p>
+          <ul class="mt-6 space-y-2.5 text-sm text-ink2">
+            <li class="flex gap-2"><span class="text-moss">—</span> Acceso a los 5 módulos completos</li>
+            <li class="flex gap-2"><span class="text-moss">—</span> Plantillas y biblioteca de prompts</li>
+            <li class="flex gap-2"><span class="text-moss">—</span> Soporte por WhatsApp</li>
+            <li class="flex gap-2"><span class="text-moss">—</span> Certificado de finalización</li>
+          </ul>
+        </div>
+
+        <a href="#lista-espera"
+          class="block text-center mt-5 bg-moss hover:bg-moss2 text-white font-display font-semibold px-6 py-3 rounded transition">
+          Reservar mi cupo
+        </a>
+      </div>
+
+      <div class="md:col-span-3 space-y-5">
+        <div class="border border-line rounded-lg p-6 bg-cream">
+          <p class="font-display font-semibold">¿Cómo funciona la reserva?</p>
+          <p class="text-sm text-ink2 mt-2 leading-relaxed">
+            No pedimos pago por adelantado. Completas el formulario, confirmamos contigo por WhatsApp, y si el curso se
+            confirma, te avisamos con anticipación para asegurar tu cupo al precio de fundador.
+          </p>
+        </div>
+        <div class="border border-line rounded-lg p-6 bg-cream">
+          <p class="font-display font-semibold">¿Y si el curso no se lanza?</p>
+          <p class="text-sm text-ink2 mt-2 leading-relaxed">
+            Estamos validando el interés real antes de producir todo el contenido. Si no se junta un número mínimo de
+            inscritos, te lo decimos con honestidad — sin sorpresas, sin cobros.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FORM ============ -->
+  <section id="lista-espera" class="max-w-6xl mx-auto px-5 sm:px-8 py-16 border-t border-line">
+    <div class="grid md:grid-cols-2 gap-10 items-start">
+      <div>
+        <span class="cell-tag">F6</span>
+        <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-4 tracking-tight">Únete a la lista de espera</h2>
+        <p class="text-ink2 mt-4 leading-relaxed max-w-md">
+          Déjanos tus datos y te contactamos por WhatsApp para confirmar tu cupo al precio de fundador. Sin pagos, sin
+          compromiso — solo para saber si vale la pena lanzar el curso.
+        </p>
+        <div class="mt-8 font-mono text-xs text-ink2 space-y-1.5">
+          <p>→ Inicio previsto: 01 de septiembre, 2026</p>
+          <p>→ Cupos limitados al precio de fundador</p>
+          <p>→ Confirmación personal por WhatsApp</p>
+        </div>
+      </div>
+
+      <div class="bg-cream border border-line rounded-lg p-7 sm:p-8 card-shadow">
+        <form id="waitlist-form" class="space-y-5">
+          <div>
+            <label for="nombre" class="block text-sm font-medium text-ink2 mb-1.5">Nombre completo</label>
+            <input required type="text" id="nombre" name="nombre"
+              class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
+              placeholder="Ej. María Quispe">
+          </div>
+          <div>
+            <label for="whatsapp" class="block text-sm font-medium text-ink2 mb-1.5">WhatsApp</label>
+            <input required type="tel" id="whatsapp" name="whatsapp"
+              class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
+              placeholder="+51 9XX XXX XXX">
+          </div>
+          <div>
+            <label for="rol" class="block text-sm font-medium text-ink2 mb-1.5">¿Cuál describe mejor tu rol?</label>
+            <select id="rol" name="rol"
+              class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition">
+              <option>Contador(a)</option>
+              <option>Auxiliar contable</option>
+              <option>Analista financiero / administrativo</option>
+              <option>Otro</option>
+            </select>
+          </div>
+          <div>
+            <label for="horas" class="block text-sm font-medium text-ink2 mb-1.5">¿Cuánto tiempo pierdes al mes en
+              tareas repetitivas de Excel?</label>
+            <select id="horas" name="horas"
+              class="w-full border border-line rounded px-4 py-2.5 bg-paper focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition">
+              <option>Menos de 2 horas</option>
+              <option>2 a 5 horas</option>
+              <option>5 a 10 horas</option>
+              <option>Más de 10 horas</option>
+            </select>
+          </div>
+
+          <button type="submit"
+            class="w-full bg-moss text-white font-display font-semibold px-6 py-3.5 rounded card-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none hover:bg-moss2 transition">
+            Reservar mi cupo
+          </button>
+          <p class="text-xs text-ink2/70 text-center">No se realiza ningún cobro al enviar este formulario.</p>
+        </form>
+
+        <div id="form-success" class="hidden text-center py-8">
+          <p class="font-display text-2xl font-semibold text-moss">¡Listo!</p>
+          <p class="text-ink2 mt-3 leading-relaxed">Recibimos tus datos. Te escribimos por WhatsApp para confirmar tu
+            cupo al precio de fundador.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section id="faq" class="max-w-6xl mx-auto px-5 sm:px-8 py-16 border-t border-line">
+    <span class="cell-tag">G7</span>
+    <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-4 tracking-tight">Preguntas frecuentes</h2>
+
+    <div class="mt-10 divide-y divide-line border-t border-b border-line max-w-3xl">
+      <details class="group py-5">
+        <summary class="flex items-center justify-between cursor-pointer">
+          <span class="font-medium">¿Necesito saber programar?</span>
+          <span class="plus-icon font-mono text-xl text-ink2">+</span>
+        </summary>
+        <p class="text-ink2 mt-3 text-sm leading-relaxed">No. El curso usa la IA como asistente para escribir el código
+          — tú aprendes a pedirlo bien, entenderlo y adaptarlo, no a programar desde cero.</p>
+      </details>
+      <details class="group py-5">
+        <summary class="flex items-center justify-between cursor-pointer">
+          <span class="font-medium">¿Qué nivel de Excel necesito tener?</span>
+          <span class="plus-icon font-mono text-xl text-ink2">+</span>
+        </summary>
+        <p class="text-ink2 mt-3 text-sm leading-relaxed">Nivel medio: manejo de fórmulas, tablas y reportes básicos. No
+          es un curso para principiantes absolutos en Excel.</p>
+      </details>
+      <details class="group py-5">
+        <summary class="flex items-center justify-between cursor-pointer">
+          <span class="font-medium">¿Cuánto tiempo toma completarlo?</span>
+          <span class="plus-icon font-mono text-xl text-ink2">+</span>
+        </summary>
+        <p class="text-ink2 mt-3 text-sm leading-relaxed">Entre 6 y 9 horas de video en total. Recomendamos 3 a 5
+          semanas a tu propio ritmo, con 3 a 5 horas por semana.</p>
+      </details>
+      <details class="group py-5">
+        <summary class="flex items-center justify-between cursor-pointer">
+          <span class="font-medium">¿Cómo confirman mi cupo?</span>
+          <span class="plus-icon font-mono text-xl text-ink2">+</span>
+        </summary>
+        <p class="text-ink2 mt-3 text-sm leading-relaxed">Por WhatsApp, de forma personal. No se realiza ningún cobro al
+          inscribirte en la lista de espera.</p>
+      </details>
+      <details class="group py-5">
+        <summary class="flex items-center justify-between cursor-pointer">
+          <span class="font-medium">¿Y si el curso finalmente no se lanza?</span>
+          <span class="plus-icon font-mono text-xl text-ink2">+</span>
+        </summary>
+        <p class="text-ink2 mt-3 text-sm leading-relaxed">Te lo comunicamos directamente y con honestidad. Como no hay
+          pago por adelantado, no hay nada que reembolsar.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ CTA FINAL ============ -->
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-20 border-t border-line">
+    <div class="bg-moss2 text-white rounded-lg p-10 sm:p-14 text-center card-shadow">
+      <p class="font-mono text-xs text-moss uppercase tracking-wider">Cupos limitados · Precio de fundador</p>
+      <h2 class="font-display text-3xl sm:text-4xl font-semibold mt-4 max-w-xl mx-auto">
+        Tu próximo reporte podría tomarte 4 minutos en vez de 4 horas.
+      </h2>
+      <a href="#lista-espera"
+        class="inline-block mt-8 border-2 border-white bg-transparent hover:bg-white text-white hover:text-moss2 font-display font-semibold px-8 py-3.5 rounded transition">
+        Unirme a la lista de espera
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="border-t border-line">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="font-display font-semibold text-ink2 text-sm">excel-ia.infoset.org.pe</p>
+      <p class="text-xs text-ink2/70 font-mono">Desarrollado con INFOSET</p>
+    </div>
+  </footer>
+
+  <!-- ============ WHATSAPP FLOAT ============ -->
+  <a href="#lista-espera" aria-label="Ir al formulario de WhatsApp"
+    class="fixed bottom-6 right-6 z-50 bg-moss hover:bg-moss2 text-white w-14 h-14 rounded-full flex items-center justify-center card-shadow-sm transition">
+    <i class="fa-brands fa-whatsapp text-2xl"></i>
+  </a>
+
+  <script>
+    // =================================================================
+    // CONFIGURACIÓN — Supabase (guardar datos)
+    // =================================================================
+    // Esta tabla es GENÉRICA: sirve para TODOS tus landings/cursos.
+    // Cada landing solo cambia el COURSE_ID de abajo — no crees una
+    // tabla nueva por cada curso.
+    //
+    // 1) SUPABASE — crea el proyecto UNA vez en supabase.com, ve a
+    //    Project Settings > API y copia la URL y la anon key aquí abajo.
+    //    (Usa el MISMO proyecto/URL/key en todos tus landings).
+    //
+    //    Crea la tabla UNA sola vez con este SQL:
+    //
+    //    create table waitlist_leads (
+    //      id uuid primary key default gen_random_uuid(),
+    //      curso text not null,          -- identifica de qué landing viene
+    //      nombre text not null,
+    //      whatsapp text not null,
+    //      extra jsonb default '{}'::jsonb,  -- campos propios de cada curso
+    //      origen text,                  -- URL del landing (automático)
+    //      created_at timestamptz default now()
+    //    );
+    //
+    //    alter table waitlist_leads enable row level security;
+    //    create policy "Permitir insertar" on waitlist_leads
+    //      for insert to anon with check (true);
+    //
+    //    -- Para ver los leads de un curso puntual más tarde:
+    //    -- select * from waitlist_leads where curso = 'excel-macros-ia';
+    //
+    const SUPABASE_URL = 'https://klrtplilnprkrmeugqgi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtscnRwbGlsbnBya3JtZXVncWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MTA5NzksImV4cCI6MjEwMTk4Njk3OX0.fdkBP9d4XP-UQyIRqVIssBCquy0Ayk2_nWemxzgKPHgl';
+    const SUPABASE_TABLE = 'waitlist_leads';
+
+    // 2) IDENTIFICADOR DE ESTE CURSO — esto es lo ÚNICO que cambias
+    //    al copiar este bloque a otro landing. Usa un slug corto y único.
+    const COURSE_ID = 'excel-macros-ia';
+
+    let sbClient = null;
+    if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
+      sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
-  }
-  typeFormula();
+    // =================================================================
 
-  // Fade-up on scroll
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('visible');
-    });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('section').forEach(s => {
-    s.classList.add('fade-up');
-    observer.observe(s);
-  });
-
-  // Form submit
-  const form = document.getElementById('waitlist-form');
-  const submitBtn = form.querySelector('button[type="submit"]');
-
-  form.addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const data = {
-      curso: COURSE_ID,
-      nombre: document.getElementById('nombre').value,
-      whatsapp: document.getElementById('whatsapp').value,
-      extra: {
-        rol: document.getElementById('rol').value,
-        horas: document.getElementById('horas').value,
-      },
-      origen: window.location.href,
-    };
-
-    const originalBtnText = submitBtn.textContent;
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Enviando...';
-
-    try {
-      // Guardar en Supabase (si está configurado)
-      if (sbClient) {
-        const { error } = await sbClient.from(SUPABASE_TABLE).insert([data]);
-        if (error) throw error;
+    // Typing animation for the formula bar
+    const formulaText = '=SI(HORAS_PERDIDAS>10,"AUTOMATIZA","SIGUE ASI")';
+    const el = document.getElementById('formula-text');
+    let i = 0;
+    function typeFormula() {
+      if (i <= formulaText.length) {
+        el.textContent = formulaText.slice(0, i);
+        i++;
+        setTimeout(typeFormula, 45);
       } else {
-        console.warn('Supabase no configurado todavía — dato no guardado:', data);
+        setTimeout(() => {i = 0; typeFormula();}, 2600);
       }
-
-      form.classList.add('hidden');
-      document.getElementById('form-success').classList.remove('hidden');
-    } catch (err) {
-      console.error('Error al enviar el formulario:', err);
-      submitBtn.disabled = false;
-      submitBtn.textContent = originalBtnText;
-      
-      // Mensaje de error más amigable
-      let errorMsg = 'Hubo un problema al enviar tus datos. Por favor intenta de nuevo.';
-      if (err.message && err.message.includes('Invalid API key')) {
-        errorMsg = 'Error de conexión con la base de datos. Por favor contacta al administrador.';
-      }
-      alert(errorMsg);
     }
-  });
-</script>
+    typeFormula();
+
+    // Fade-up on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, {threshold: 0.1});
+    document.querySelectorAll('section').forEach(s => {
+      s.classList.add('fade-up');
+      observer.observe(s);
+    });
+
+    // Form submit
+    const form = document.getElementById('waitlist-form');
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const data = {
+        curso: COURSE_ID,
+        nombre: document.getElementById('nombre').value,
+        whatsapp: document.getElementById('whatsapp').value,
+        extra: {
+          rol: document.getElementById('rol').value,
+          horas: document.getElementById('horas').value,
+        },
+        origen: window.location.href,
+      };
+
+      const originalBtnText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
+
+      try {
+        // Guardar en Supabase (si está configurado)
+        if (sbClient) {
+          const {error} = await sbClient.from(SUPABASE_TABLE).insert([data]);
+          if (error) throw error;
+        } else {
+          console.warn('Supabase no configurado todavía — dato no guardado:', data);
+        }
+
+        form.classList.add('hidden');
+        document.getElementById('form-success').classList.remove('hidden');
+      } catch (err) {
+        console.error('Error al enviar el formulario:', err);
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+
+        // Mensaje de error más amigable
+        let errorMsg = 'Hubo un problema al enviar tus datos. Por favor intenta de nuevo.';
+        if (err.message && err.message.includes('Invalid API key')) {
+          errorMsg = 'Error de conexión con la base de datos. Por favor contacta al administrador.';
+        }
+        alert(errorMsg);
+      }
+    });
+  </script>
 
 </body>
+
 </html>
